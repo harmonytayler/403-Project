@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/403projectStyle.css">
+    <title>Edit Goal</title>
+</head>
+<body>
+    <header>
+        <h1>Edit Goal</h1>
+    </header>
+    <nav>
+        <a href="#"><button class="link">Home</button></a>
+        <a href="#"><button class="link">Goals</button></a>
+        <a href="#"><button class="link">Health Metrics</button></a>
+    </nav>
+    <main>
+        <section>
+            <form action="/editGoal/<%= goals.goalid %>" method="POST">
+                <label for="goals">Description</label>
+                <input type="text" id="description" name="description" value="<%= goals.description %>">
+        
+                <label for="goals">Status</label>
+                <label for="status">
+                    <input type="checkbox" id="status" name="status" value="true" <%= goals.status ? 'checked' : '' %>>
+                </label>
+                
+        </section>
+        <section>
+                <button type="submit">Save Goal</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/403projectStyle.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h1>Add Goal</h1>
+    </header>
+    <nav>
+        <a href="#"><button class="link">Home</button></a>
+        <a href="#"><button class="link">Goals</button></a>
+        <a href="#"><button class="link">Health Metrics</button></a>
+    </nav>
+    
+    <main>
+        <section>
+            <form action="/addGoal" method="POST">
+                <label for="description">Goal Description:</label>
+                <input type="text" id="description" name="description" required>
+            
+                <button type="submit">Add Goal</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
