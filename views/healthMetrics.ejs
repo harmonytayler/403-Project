@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Health Metrics</title>
+    <link rel="stylesheet" href="/css/403projectStyle.css">
+</head>
+<body>
+    <header>
+        <h1>Health Metrics</h1>
+    </header>
+    <nav>
+        <a href="/"><button class="link">Home</button></a>
+        <a href="#"><button class="link">Goals</button></a>
+        <a href="healthMetrics"><button class="link">Health Metrics</button></a>
+    </nav>
+
+    <main>
+        <section>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Weight</th>
+                        <th>Height</th>
+                        <th>BMI</th>
+                        <th>Calories Consumed</th>
+                        <th>Calories Burned</th>
+                        <th>Record Date</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (health_metrics.length > 0) { %>
+                        <% health_metrics.forEach(row => { %>
+                            <tr>
+                                <input type="hidden" value="row.metricID">
+                                <input type="hidden" value="row.custID">
+                                <td><%= row.custWeight %></td>
+                                <td><%= row.custHeightIN %></td>
+                                <td><%= row.custBMI%></td>
+                                <td><%= row.caloriesConsumed %></td>
+                                <td><%= row.caloriesBurned %></td>
+                                <td><%= new Date(row.recordDate).toLocaleDateString('en-US') %></td> <!-- Format date -->
+                                <td>
+                                <!-- Calling editMetric, and adding a parameter that has the primary key, so that it finds one row. -->
+                                <form action="/editMetric/<%= row.metricID %>" method="GET">
+                                    <button type="submit">Edit</button>
+                                </form>
+                                </td>
+                                <td>
+                                <form action="/deleteMetric/<%= row.metricID %>" method="POST">
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
+                                </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                        <td colspan="7">No data available</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <br>
+            <form action="/addMetric" method="GET">
+                <button type="submit">Add</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
