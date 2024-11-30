@@ -14,64 +14,14 @@
         <h1>My Fitness Plan</h1>
     </header>
     <nav>
-        <a href="#"><button class="link">Home</button></a>
-        <a href="#"><button class="link">Goals</button></a>
-        <a href="#"><button class="link">Health Metrics</button></a>
+        <a href="/"><button class="link">Home</button></a>
+        <a href="goals"><button class="link">Goals</button></a>
+        <a href="healthMetrics"><button class="link">Health Metrics</button></a>
     </nav>
 
     <main>
-        <section>This area will show the user information (or administrator stuff if you've logged in as admin) once we've got the database connected.</section>
-        <section>
-            <h1>My Goals</h1>
-        <!-- Table to display goals -->
-            <table>
-                <thead>
-                    <tr>
-                        <th hidden>Goal ID</th>
-                        <th>Goal</th>
-                        <th>Status</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody id="goaltable">
-                    <% if (goals.length > 0) { %>
-                        <% goals.forEach(row => { %>
-                        <tr>
-                            <input type="hidden" value="row.goalid">
-                            <td hidden><%= row.goalid %></td>
-                            <td><%= row.description %></td>
-                            <td>
-                                <form action="/editGoal/<%= row.goalid %>" method="POST">
-                                    <input type="checkbox" id="status" name="status" value='true' <%= row.status ? 'checked' : '' %> onchange="this.form.submit()">
-                                </form>
-                            </td>
-                            <td>
-                                <form action="/editGoal/<%= row.goalid %>" method="GET">
-                                    <button type="submit">Edit</button>
-                                </form>
-                            </td>
-                            <td>
-                                <form action="/deleteGoal/<%= row.goalid %>" method="POST">
-                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this goal? This cannot be undone.');">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <% }) %>
-                    <% } else { %>
-                        <tr>
-                            <td colspan="4">You haven't created any goals yet. Add one below to get started!</td>
-                        </tr>
-                    <% } %>
-                </tbody>
-            </table>
-        <br>
-        <form action="/addGoal" method="GET">
-            <button type="submit">Add Goal</button>
-        </form>
-        </section>
+        <section>This area will show some user (or admin) info once that stuff is ready.</section>
     </main>
-    
 </body>
 
 <footer>

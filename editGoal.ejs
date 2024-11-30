@@ -10,20 +10,15 @@
     <header>
         <h1>Edit Goal</h1>
     </header>
-    <nav>
-        <a href="#"><button class="link">Home</button></a>
-        <a href="#"><button class="link">Goals</button></a>
-        <a href="#"><button class="link">Health Metrics</button></a>
-    </nav>
     <main>
         <section>
-            <form action="/editGoal/<%= goals.goalid %>" method="POST">
+            <form action="/editGoal/<%= goals.goalID %>" method="POST">
                 <label for="goals">Description</label>
-                <input type="text" id="description" name="description" value="<%= goals.description %>">
+                <input type="text" id="goalDescription" name="goalDescription" value="<%= goals.goalDescription %>">
         
                 <label for="goals">Status</label>
-                <label for="status">
-                    <input type="checkbox" id="status" name="status" value="true" <%= goals.status ? 'checked' : '' %>>
+                <label for="goalStatus">
+                    <input type="checkbox" id="goalStatus" name="goalStatus" value="true" <%= goals.goalStatus ? 'checked' : '' %>>
                 </label>
                 
         </section>
