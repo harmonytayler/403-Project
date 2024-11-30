@@ -19,22 +19,21 @@ const knex = require("knex") ({
         host : "localhost",
         user : "postgres",
         password : "admin",
-        database : "testproject", //REPLACE WITH REAL DATABASE
+        database : "403project",
         port : 5432
     }
 });
 
-// REPLACE WITH ALL THE REAL INFO
 app.get('/', (req, res) => {
     knex('goals')
-        .join('users', 'goals.userid', '=', 'users.userid')
+        .join('customers', 'goals.custID', '=', 'customers.custID')
         .select(
-        'users.userid',
-        'goals.goalid',
-        'goals.description',
-        'goals.status'
+        'customers.custID',
+        'goals.goalID',
+        'goals.goalDescription',
+        'goals.goalStatus'
         )
-        .orderBy('goals.goalid')
+        .orderBy('goals.goalID')
         .then(goals => {
         res.render('index', { goals });
         })
@@ -44,13 +43,31 @@ app.get('/', (req, res) => {
         });
     });
 
+app.get('/goals', (req, res) => {
+    knex('goals')
+        .join('customers', 'goals.custID', '=', 'customers.custID')
+        .select(
+        'customers.custID',
+        'goals.goalID',
+        'goals.goalDescription',
+        'goals.goalStatus'
+        )
+        .orderBy('goals.goalID')
+        .then(goals => {
+        res.render('goals', { goals });
+        })
+        .catch(error => {
+        console.error('Error querying database:', error);
+        res.status(500).send('Internal Server Error');
+        });
+    });
+
 //NEED TO MAKE THIS SECTION ABLE TO EDIT GOALS
-app.get('/editGoal/:goalid', (req, res) => {
-    const goalid = req.params.goalid; // Extract goal ID from route params
-    console.log(goalid);
+app.get('/editGoal/:goalID', (req, res) => {
+    const goalID = req.params.goalID; // Extract goal ID from route params
     // Fetch the specific goal by ID
     knex('goals')
-        .where('goalid', goalid) // Match the specific goal
+        .where('goalID', goalID) // Match the specific goal
         .first() // Get only one result
         .then(goals => {
             if (!goals) {
@@ -66,19 +83,19 @@ app.get('/editGoal/:goalid', (req, res) => {
 });
 
 //THIS SECTION WILL SAVE THE EDITED GOALS BACK TO THE DATABASE
-app.post('/editGoal/:goalid', (req, res) => {
-    const goalid = req.params.goalid;
-    const description = req.body.description;
-    const status = req.body.status === 'true';
+app.post('/editGoal/:goalID', (req, res) => {
+    const goalID = req.params.goalID;
+    const goalDescription = req.body.goalDescription;
+    const goalStatus = req.body.goalStatus === 'true';
     // Update the goal in the database
     knex('goals')
-        .where('goalid', goalid)
+        .where('goalID', goalID)
         .update({
-        description: description,
-        status: status
+        goalDescription: goalDescription,
+        goalStatus: goalStatus
         })
         .then(() => {
-        res.redirect('/'); // Redirect to the list of goals after saving
+        res.redirect('/goals');
         })
         .catch(error => {
         console.error('Error updating goal:', error);
@@ -87,13 +104,13 @@ app.post('/editGoal/:goalid', (req, res) => {
     });
 
 //USE THIS SECTION TO DELETE GOALS
-app.post('/deleteGoal/:goalid', (req, res) => {
-    const goalid = req.params.goalid;
+app.post('/deleteGoal/:goalID', (req, res) => {
+    const goalID = req.params.goalID;
     knex('goals')
-        .where('goalid', goalid)
+        .where('goalID', goalID)
         .del() // Deletes the record with the specified ID
         .then(() => {
-        res.redirect('/'); // Redirect to the goal list after deletion
+        res.redirect('/goals'); // Redirect to the goal list after deletion
         })
         .catch(error => {
         console.error('Error deleting goal:', error);
@@ -103,6 +120,146 @@ app.post('/deleteGoal/:goalid', (req, res) => {
 
 app.get('/addGoal', (req, res) => {
     res.render('addGoal'); 
+});
+
+app.post('/addGoal', (req, res) => {
+    const goalDescription = req.body.goalDescription;
+    const custID = req.body.custID;
+    knex('goals')
+        .insert({custID: custID, goalDescription: goalDescription, goalStatus: false})
+        .then(() => {
+            res.redirect('/goals');
+            })
+})
+
+// Route to display Health Metric records
+app.get('/healthMetrics', (req, res) => {
+    knex('health_metrics')
+        .select(
+        'health_metrics.metricID',
+        'health_metrics.custWeight',
+        'health_metrics.custHeightIN',
+        'health_metrics.custBMI',
+        'health_metrics.caloriesConsumed',
+        'health_metrics.caloriesBurned',
+        'health_metrics.recordDate',
+        )
+        .then(health_metrics => {
+        // Render the index.ejs template and pass the data
+        res.render('healthMetrics', {health_metrics});
+        })
+        .catch(error => {
+        console.error('Error querying database:', error);
+        res.status(500).send('Internal Server Error');
+    });
+});  
+
+app.get('/editMetric/:metricID', (req, res) => {
+    const metricID = req.params.metricID;
+    // Query the data by ID first
+    knex('health_metrics')
+        .where('metricID', metricID)
+        .first()
+        .then(metric => {
+        if (!metric) {
+            return res.status(404).send('Not found');
+        }
+        // Query all data after fetching the data
+        res.render('editMetric', { metric });
+            })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            res.status(500).send('Internal Server Error');
+        });
+});
+
+app.post('/editMetric/:metricID', (req, res) => {
+    const metricID = req.params.metricID;
+
+    // Access each value directly from req.body
+    const weight = parseInt(req.body.custWeight);
+    const height = req.body.custHeightIN;
+    const bmi = parseFloat(req.body.custBMI);
+    const caloriesConsumed = parseInt(req.body.caloriesConsumed);
+    const caloriesBurned = parseInt(req.body.caloriesBurned);
+    const recordDate = req.body.recordDate;
+
+    // Update the data in the database
+    knex('health_metrics')
+        .where('metricID', metricID)
+        .update({
+        custWeight: weight,
+        custHeightIN: height,
+        custBMI: bmi,
+        caloriesConsumed: caloriesConsumed,
+        caloriesBurned: caloriesBurned,
+        recordDate: recordDate,
+        })
+        .then(() => {
+        res.redirect('/healthMetrics'); // Redirect to the list after saving
+        })
+        .catch(error => {
+        console.error('Error updating Data:', error);
+        res.status(500).send('Internal Server Error');
+    });
+});
+
+app.post('/deleteMetric/:metricID', (req, res) => {
+    const metricID = req.params.metricID;
+    knex('health_metrics')
+        .where('metricID', metricID)
+      .del() // Deletes the record with the specified ID
+        .then(() => {
+        res.redirect('/healthMetrics'); // Redirect to the list after deletion
+        })
+        .catch(error => {
+        console.error('Error deleting data:', error);
+        res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/addMetric', (req, res) => {
+  // Fetch data
+    knex('health_metrics')
+        .select('metricID')
+        .then(metric => {
+          // Render the add form with the data
+            res.render('addMetric', { metric });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            res.status(500).send('Internal Server Error');
+        });
+});
+
+app.post('/addMetric', (req, res) => {
+  // Extract form values from req.body
+const weight = parseInt(req.body.custWeight);
+const height = req.body.custHeightIN;
+const bmi = parseFloat(req.body.custBMI); 
+const caloriesConsumed = parseInt(req.body.caloriesConsumed);
+const caloriesBurned = parseInt(req.body.caloriesBurned); // Convert to integer
+const recordDate = req.body.recordDate || new Date().toISOString().split('T')[0]; // Default to today
+const custID = req.body.custID;
+
+  // Insert the new data into the database
+    knex('health_metrics')
+        .insert({
+            custID: custID,
+            custWeight: weight,
+            custHeightIN: height,
+            custBMI: bmi,
+            caloriesConsumed: caloriesConsumed,
+            caloriesBurned: caloriesBurned,
+            recordDate: recordDate,
+        })
+        .then(() => {
+          res.redirect('/healthMetrics'); // Redirect to the list page after adding
+        })
+        .catch(error => {
+            console.error('Error adding data:', error);
+            res.status(500).send('Internal Server Error');
+        });
 });
 
 app.listen(port, () => console.log("Listening"));
