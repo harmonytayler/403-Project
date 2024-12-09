@@ -11,16 +11,21 @@
         <h1>Add Goal</h1>
     </header>
     <nav>
-        <a href="index"><button class="link">Home</button></a>
-        <a href="#"><button class="link">Goals</button></a>
+        <a href="/"><button class="link">Home</button></a>
+        <a href="goals"><button class="link">Goals</button></a>
         <a href="healthMetrics"><button class="link">Health Metrics</button></a>
+        <a href="login"><button class="link">Login</button></a>
     </nav>
     
     <main>
         <section>
             <form action="/addGoal" method="POST">
-                <label for="goaldescription">Goal Description:</label>
-                <input type="text" id="goaldescription" name="goaldescription" required>
+                <table>
+                    <tr>
+                        <td><label for="goaldescription">Goal Description</label></td>
+                        <td><input type="text" id="goaldescription" name="goaldescription" required></td>
+                    </tr>
+                </table>
                 <input type="hidden" name="custid" value="5">
                 <button type="submit">Add Goal</button>
             </form>

@@ -5,44 +5,49 @@
     <link rel="stylesheet" href="/css/403projectStyle.css">
 </head>
 <body>
-    <h1 style="text-align: center;">Add Metric</h1>
-
-    <form action="/addMetric" method="POST">
-
-        <input type="hidden" name="custID" value="5">
-
-        <!-- Weight -->
-        <label for="weight">Weight</label>
-        <input type="number" id="custWeight" name="custWeight">
-        <br><br>
-
-        <!-- Height -->
-        <label for="height">Height</label>
-        <input type="text" id="custHeightIN" name="custHeightIN">
-        <br><br>
-        
-        <!-- BMI -->
-        <label for="bmi">BMI</label>
-        <input type="number" id="custBMI" name="custBMI" step=".01">
-        <br><br>
-        
-        <!-- Calories Consumed -->
-        <label for="caloriesConsumed">Calories Consumed</label>
-        <input type="number" id="caloriesConsumed" name="caloriesConsumed">
-        <br><br>
-
-        <!-- Calories Burned -->
-        <label for="caloriesBurned">Calories Burned</label>
-        <input type="number" id="caloriesBurned" name="caloriesBurned">
-        <br><br>
-
-        <!-- Record Date -->
-        <label for="recordDate">Date Created</label>
-        <input type="date" id="recordDate" name="recordDate" value="<%= new Date().toISOString().split('T')[0] %>" required>
-        <br><br>
-        
-        <!-- Submit Button -->
-        <button type="submit">Add Metric</button>
+    <header>
+        <h1>Add Metric</h1>
+    </header>
+    <nav>
+        <a href="/"><button class="link">Home</button></a>
+        <a href="goals"><button class="link">Goals</button></a>
+        <a href="healthMetrics"><button class="link">Health Metrics</button></a>
+        <a href="login"><button class="link">Login</button></a>
+    </nav>
+    
+<main>
+    <section>
+        <form action="/addMetric" method="POST">
+            <table>
+                <input type="hidden" name="custid" value="5">
+                <tr>
+                    <td><label for="custweight">Weight</label></td>
+                    <td><input type="number" id="custweight" name="custweight"></td>
+                </tr>
+                <tr>
+                    <td><label for="custheightin">Height</label></td>
+                    <td><input type="text" id="custheightin" name="custheightin"></td>
+                </tr>
+                <tr>
+                    <td><label for="custbmi">BMI</label></td>
+                    <td><input type="number" id="custbmi" name="custbmi" step=".01"></td>
+                </tr>
+                <tr>
+                    <td><label for="caloriesconsumed">Calories Consumed</label></td>
+                    <td><input type="number" id="caloriesconsumed" name="caloriesconsumed"></td>
+                </tr>
+                <tr>
+                    <td><label for="caloriesburned">Calories Burned</label></td>
+                    <td><input type="number" id="caloriesburned" name="caloriesburned"></td>
+                </tr>
+                <tr>
+                    <td><label for="recorddate">Date Created</label></td>
+                    <td><input type="date" id="recorddate" name="recorddate" value="<%= new Date().toISOString().split('T')[0] %>" required></td>
+                </tr>
+            </table>
+            <button type="submit">Add Metric</button>
+    </section>
+</main>
     </form>
 </body>
 </html>
