@@ -26,14 +26,14 @@ const knex = require("knex") ({
 
 app.get('/', (req, res) => {
     knex('goals')
-        .join('customers', 'goals.custID', '=', 'customers.custID')
+        .join('customers', 'goals.custid', '=', 'customers.custid')
         .select(
-        'customers.custID',
-        'goals.goalID',
-        'goals.goalDescription',
-        'goals.goalStatus'
+        'customers.custid',
+        'goals.goalid',
+        'goals.goaldescription',
+        'goals.goalstatus'
         )
-        .orderBy('goals.goalID')
+        .orderBy('goals.goalid')
         .then(goals => {
         res.render('index', { goals });
         })
@@ -45,14 +45,14 @@ app.get('/', (req, res) => {
 
 app.get('/goals', (req, res) => {
     knex('goals')
-        .join('customers', 'goals.custID', '=', 'customers.custID')
+        .join('customers', 'goals.custid', '=', 'customers.custid')
         .select(
-        'customers.custID',
-        'goals.goalID',
-        'goals.goalDescription',
-        'goals.goalStatus'
+        'customers.custid',
+        'goals.goalid',
+        'goals.goaldescription',
+        'goals.goalstatus'
         )
-        .orderBy('goals.goalID')
+        .orderBy('goals.goalid')
         .then(goals => {
         res.render('goals', { goals });
         })
@@ -62,18 +62,15 @@ app.get('/goals', (req, res) => {
         });
     });
 
-//NEED TO MAKE THIS SECTION ABLE TO EDIT GOALS
-app.get('/editGoal/:goalID', (req, res) => {
-    const goalID = req.params.goalID; // Extract goal ID from route params
-    // Fetch the specific goal by ID
+app.get('/editGoal/:goalid', (req, res) => {
+    const goalid = req.params.goalid; 
     knex('goals')
-        .where('goalID', goalID) // Match the specific goal
-        .first() // Get only one result
+        .where('goalid', goalid)
+        .first() 
         .then(goals => {
             if (!goals) {
                 return res.status(404).send('Goal not found.');
             }
-            // Pass the goal data to the editGoal.ejs template
             res.render('editGoal', { goals });
         })
         .catch(error => {
@@ -82,17 +79,15 @@ app.get('/editGoal/:goalID', (req, res) => {
         });
 });
 
-//THIS SECTION WILL SAVE THE EDITED GOALS BACK TO THE DATABASE
-app.post('/editGoal/:goalID', (req, res) => {
-    const goalID = req.params.goalID;
-    const goalDescription = req.body.goalDescription;
-    const goalStatus = req.body.goalStatus === 'true';
-    // Update the goal in the database
+app.post('/editGoal/:goalid', (req, res) => {
+    const goalid = req.params.goalid;
+    const goaldescription = req.body.goaldescription;
+    const goalstatus = req.body.goalstatus === 'true';
     knex('goals')
-        .where('goalID', goalID)
+        .where('goalid', goalid)
         .update({
-        goalDescription: goalDescription,
-        goalStatus: goalStatus
+        goaldescription: goaldescription,
+        goalstatus: goalstatus
         })
         .then(() => {
         res.redirect('/goals');
@@ -103,14 +98,13 @@ app.post('/editGoal/:goalID', (req, res) => {
         });
     });
 
-//USE THIS SECTION TO DELETE GOALS
-app.post('/deleteGoal/:goalID', (req, res) => {
-    const goalID = req.params.goalID;
+app.post('/deleteGoal/:goalid', (req, res) => {
+    const goalid = req.params.goalid;
     knex('goals')
-        .where('goalID', goalID)
-        .del() // Deletes the record with the specified ID
+        .where('goalid', goalid)
+        .del()
         .then(() => {
-        res.redirect('/goals'); // Redirect to the goal list after deletion
+        res.redirect('/goals'); 
         })
         .catch(error => {
         console.error('Error deleting goal:', error);
@@ -123,10 +117,10 @@ app.get('/addGoal', (req, res) => {
 });
 
 app.post('/addGoal', (req, res) => {
-    const goalDescription = req.body.goalDescription;
-    const custID = req.body.custID;
+    const goaldescription = req.body.goaldescription;
+    const custid = req.body.custid;
     knex('goals')
-        .insert({custID: custID, goalDescription: goalDescription, goalStatus: false})
+        .insert({custid: custid, goaldescription: goaldescription, goalstatus: false})
         .then(() => {
             res.redirect('/goals');
             })
@@ -240,12 +234,12 @@ const bmi = parseFloat(req.body.custBMI);
 const caloriesConsumed = parseInt(req.body.caloriesConsumed);
 const caloriesBurned = parseInt(req.body.caloriesBurned); // Convert to integer
 const recordDate = req.body.recordDate || new Date().toISOString().split('T')[0]; // Default to today
-const custID = req.body.custID;
+const custid = req.body.custid;
 
   // Insert the new data into the database
     knex('health_metrics')
         .insert({
-            custID: custID,
+            custid: custid,
             custWeight: weight,
             custHeightIN: height,
             custBMI: bmi,
