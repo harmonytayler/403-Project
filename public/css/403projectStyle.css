@@ -155,3 +155,7 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+footer p {
+    opacity: 70%;
+}
