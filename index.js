@@ -130,13 +130,13 @@ app.post('/addGoal', (req, res) => {
 app.get('/healthMetrics', (req, res) => {
     knex('health_metrics')
         .select(
-        'health_metrics.metricID',
-        'health_metrics.custWeight',
-        'health_metrics.custHeightIN',
-        'health_metrics.custBMI',
-        'health_metrics.caloriesConsumed',
-        'health_metrics.caloriesBurned',
-        'health_metrics.recordDate',
+        'health_metrics.metricid',
+        'health_metrics.custweight',
+        'health_metrics.custheightin',
+        'health_metrics.custbmi',
+        'health_metrics.caloriesconsumed',
+        'health_metrics.caloriesburned',
+        'health_metrics.recorddate',
         )
         .then(health_metrics => {
         // Render the index.ejs template and pass the data
@@ -148,11 +148,11 @@ app.get('/healthMetrics', (req, res) => {
     });
 });  
 
-app.get('/editMetric/:metricID', (req, res) => {
-    const metricID = req.params.metricID;
+app.get('/editMetric/:metricid', (req, res) => {
+    const metricid = req.params.metricid;
     // Query the data by ID first
     knex('health_metrics')
-        .where('metricID', metricID)
+        .where('metricid', metricid)
         .first()
         .then(metric => {
         if (!metric) {
@@ -167,27 +167,27 @@ app.get('/editMetric/:metricID', (req, res) => {
         });
 });
 
-app.post('/editMetric/:metricID', (req, res) => {
-    const metricID = req.params.metricID;
+app.post('/editMetric/:metricid', (req, res) => {
+    const metricid = req.params.metricid;
 
     // Access each value directly from req.body
-    const weight = parseInt(req.body.custWeight);
-    const height = req.body.custHeightIN;
-    const bmi = parseFloat(req.body.custBMI);
-    const caloriesConsumed = parseInt(req.body.caloriesConsumed);
-    const caloriesBurned = parseInt(req.body.caloriesBurned);
-    const recordDate = req.body.recordDate;
+    const weight = parseInt(req.body.custweight);
+    const height = req.body.custheightin;
+    const bmi = parseFloat(req.body.custbmi);
+    const caloriesconsumed = parseInt(req.body.caloriesconsumed);
+    const caloriesburned = parseInt(req.body.caloriesburned);
+    const recorddate = req.body.recorddate;
 
     // Update the data in the database
     knex('health_metrics')
-        .where('metricID', metricID)
+        .where('metricid', metricid)
         .update({
-        custWeight: weight,
-        custHeightIN: height,
-        custBMI: bmi,
-        caloriesConsumed: caloriesConsumed,
-        caloriesBurned: caloriesBurned,
-        recordDate: recordDate,
+        custweight: weight,
+        custheightin: height,
+        custbmi: bmi,
+        caloriesconsumed: caloriesconsumed,
+        caloriesburned: caloriesburned,
+        recorddate: recorddate,
         })
         .then(() => {
         res.redirect('/healthMetrics'); // Redirect to the list after saving
@@ -198,10 +198,10 @@ app.post('/editMetric/:metricID', (req, res) => {
     });
 });
 
-app.post('/deleteMetric/:metricID', (req, res) => {
-    const metricID = req.params.metricID;
+app.post('/deleteMetric/:metricid', (req, res) => {
+    const metricid = req.params.metricid;
     knex('health_metrics')
-        .where('metricID', metricID)
+        .where('metricid', metricid)
       .del() // Deletes the record with the specified ID
         .then(() => {
         res.redirect('/healthMetrics'); // Redirect to the list after deletion
@@ -215,7 +215,7 @@ app.post('/deleteMetric/:metricID', (req, res) => {
 app.get('/addMetric', (req, res) => {
   // Fetch data
     knex('health_metrics')
-        .select('metricID')
+        .select('metricid')
         .then(metric => {
           // Render the add form with the data
             res.render('addMetric', { metric });
@@ -227,25 +227,22 @@ app.get('/addMetric', (req, res) => {
 });
 
 app.post('/addMetric', (req, res) => {
-  // Extract form values from req.body
-const weight = parseInt(req.body.custWeight);
-const height = req.body.custHeightIN;
-const bmi = parseFloat(req.body.custBMI); 
-const caloriesConsumed = parseInt(req.body.caloriesConsumed);
-const caloriesBurned = parseInt(req.body.caloriesBurned); // Convert to integer
-const recordDate = req.body.recordDate || new Date().toISOString().split('T')[0]; // Default to today
+const weight = parseInt(req.body.custweight);
+const height = req.body.custheightin;
+const bmi = parseFloat(req.body.custbmi); 
+const caloriesconsumed = parseInt(req.body.caloriesconsumed);
+const caloriesburned = parseInt(req.body.caloriesburned); // Convert to integer
+const recorddate = req.body.recorddate || new Date().toISOString().split('T')[0]; // Default to today
 const custid = req.body.custid;
-
-  // Insert the new data into the database
     knex('health_metrics')
         .insert({
             custid: custid,
             custWeight: weight,
-            custHeightIN: height,
-            custBMI: bmi,
-            caloriesConsumed: caloriesConsumed,
-            caloriesBurned: caloriesBurned,
-            recordDate: recordDate,
+            custheightin: height,
+            custbmi: bmi,
+            caloriesconsumed: caloriesconsumed,
+            caloriesburned: caloriesburned,
+            recorddate: recorddate,
         })
         .then(() => {
           res.redirect('/healthMetrics'); // Redirect to the list page after adding
@@ -254,6 +251,9 @@ const custid = req.body.custid;
             console.error('Error adding data:', error);
             res.status(500).send('Internal Server Error');
         });
+});
+
+app.get('/login', (req, res) => {res.render('login');
 });
 
 app.listen(port, () => console.log("Listening"));
