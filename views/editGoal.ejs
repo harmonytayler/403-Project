@@ -12,15 +12,17 @@
     </header>
     <main>
         <section>
-            <form action="/editGoal/<%= goals.goalID %>" method="POST">
-                <label for="goals">Description</label>
-                <input type="text" id="goalDescription" name="goalDescription" value="<%= goals.goalDescription %>">
-        
-                <label for="goals">Status</label>
-                <label for="goalStatus">
-                    <input type="checkbox" id="goalStatus" name="goalStatus" value="true" <%= goals.goalStatus ? 'checked' : '' %>>
-                </label>
-                
+            <form action="/editGoal/<%= goals.goalid %>" method="POST">
+                <table>
+                    <tr>
+                        <td><label for="goals">Description</label></td>
+                        <td><input type="text" id="goaldescription" name="goaldescription" value="<%= goals.goaldescription %>"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="goals">Status</label></td>
+                        <td><input type="checkbox" id="goalstatus" name="goalstatus" value='true' <%= goals.goalstatus ? 'checked' : '' %>></td>
+                    </tr>
+                </table>
         </section>
         <section>
                 <button type="submit">Save Goal</button>

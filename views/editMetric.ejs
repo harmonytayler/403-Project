@@ -11,31 +11,32 @@
     <main>
         <section>
             <form action="/editMetric/<%= metric.metricID %>" method="POST">
-                <!-- Weight -->
-                <label for="weight">Weight</label>
-                <input type="number" id="custWeight" name="custWeight" value="<%= metric.custWeight %>">
-                
-                <!-- Height -->
-                <label for="height">Height</label>
-                <input type="text" id="custHeightIN" name="custHeightIN" value="<%= metric.custHeightIN %>">
-                
-                <!-- BMI -->
-                <label for="bmi">BMI</label>
-                <input type="number" id="custBMI" name="custBMI" value="<%= metric.custBMI %>" step=".01">
-                
-                <!-- Calories Consumed -->
-                <label for="caloriesConsumed">Calories Consumed</label>
-                <input type="number" id="caloriesConsumed" name="caloriesConsumed" value="<%= metric.caloriesConsumed %>">
-        
-                <!-- Calories Burned -->
-                <label for="caloriesBurned">Calories Burned</label>
-                <input type="number" id="caloriesBurned" name="caloriesBurned" value="<%= metric.caloriesBurned %>">
-        
-                <!-- Record Date -->
-                <label for="recordDate">Record Date</label>
-                <input type="date" id="recordDate" name="recordDate" value="<%= metric.recordDate.toISOString().split('T')[0] %>">
-        
-                <!-- Submit Button -->
+                <table>
+                    <tr>
+                        <td><label for="weight">Weight</label></td>
+                        <td><input type="number" id="custWeight" name="custWeight" value="<%= metric.custWeight %>"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="height">Height</label></td>
+                        <td><input type="text" id="custHeightIN" name="custHeightIN" value="<%= metric.custHeightIN %>"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="bmi">BMI</label></td>
+                        <td><input type="number" id="custBMI" name="custBMI" value="<%= metric.custBMI %>" step=".01"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="caloriesConsumed">Calories Consumed</label></td>
+                        <td><input type="number" id="caloriesConsumed" name="caloriesConsumed" value="<%= metric.caloriesConsumed %>"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="caloriesBurned">Calories Burned</label></td>
+                        <td><input type="number" id="caloriesBurned" name="caloriesBurned" value="<%= metric.caloriesBurned %>"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="recordDate">Record Date</label></td>
+                        <td><input type="date" id="recordDate" name="recordDate" value="<%= metric.recordDate.toISOString().split('T')[0] %>"></td>
+                    </tr>
+                </table>
                 <button type="submit">Save Changes</button>
             </form>
         </section>
