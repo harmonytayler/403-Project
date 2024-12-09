@@ -12,6 +12,7 @@
         <a href="/"><button class="link">Home</button></a>
         <a href="goals"><button class="link">Goals</button></a>
         <a href="healthMetrics"><button class="link">Health Metrics</button></a>
+        <a href="login"><button class="link">Login</button></a>
     </nav>
 
     <main>
@@ -35,20 +36,20 @@
                             <tr>
                                 <input type="hidden" value="row.metricID">
                                 <input type="hidden" value="row.custID">
-                                <td><%= row.custWeight %></td>
-                                <td><%= row.custHeightIN %></td>
-                                <td><%= row.custBMI%></td>
-                                <td><%= row.caloriesConsumed %></td>
-                                <td><%= row.caloriesBurned %></td>
-                                <td><%= new Date(row.recordDate).toLocaleDateString('en-US') %></td> <!-- Format date -->
+                                <td><%= row.custweight %></td>
+                                <td><%= row.custheightin %></td>
+                                <td><%= row.custbmi%></td>
+                                <td><%= row.caloriesconsumed %></td>
+                                <td><%= row.caloriesburned %></td>
+                                <td><%= new Date(row.recorddate).toLocaleDateString('en-US') %></td> <!-- Format date -->
                                 <td>
                                 <!-- Calling editMetric, and adding a parameter that has the primary key, so that it finds one row. -->
-                                <form action="/editMetric/<%= row.metricID %>" method="GET">
+                                <form action="/editMetric/<%= row.metricid %>" method="GET">
                                     <button type="submit">Edit</button>
                                 </form>
                                 </td>
                                 <td>
-                                <form action="/deleteMetric/<%= row.metricID %>" method="POST">
+                                <form action="/deleteMetric/<%= row.metricid %>" method="POST">
                                     <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
                                 </form>
                                 </td>
@@ -63,7 +64,7 @@
             </table>
             <br>
             <form action="/addMetric" method="GET">
-                <button type="submit">Add</button>
+                <button type="submit">Add Metric</button>
             </form>
         </section>
     </main>
