@@ -72,21 +72,21 @@ th, td {
 }
 
 th {
-    background-color: #82c697; /* Aloe vera green */
+    background-color: #82c697;
     color: white;
 }
 
 tr:nth-child(even) {
-    background-color: #f5fdf2; /* Very soft green for alternating rows */
+    background-color: #f5fdf2;
 }
 
 tr:hover {
-    background-color: #e3f6df; /* Slightly darker soft green for hover */
+    background-color: #e3f6df;
 }
 
 /* Buttons */
 button {
-    background-color: #82c697; /* Aloe vera green */
+    background-color: #82c697;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -98,7 +98,7 @@ button {
 }
 
 button:hover {
-    background-color: #6daf81; /* Slightly darker shade for hover */
+    background-color: #6daf81;
 }
 
 /* Forms */
@@ -118,44 +118,28 @@ input, select, textarea {
 }
 
 input:focus, select:focus, textarea:focus {
-    border-color: #82c697; /* Aloe vera green for focus */
+    border-color: #82c697;
     outline: none;
-}
-
-/* Progress Bars */
-.progress-container {
-    background-color: #f5fdf2; /* Soft green background */
-    border-radius: 25px;
-    overflow: hidden;
-    width: 100%;
-    max-width: 400px;
-    margin-top: 1rem;
-}
-
-.progress-bar {
-    height: 20px;
-    width: 70%; /* Example: Set dynamically */
-    background-color: #82c697; /* Aloe vera green */
-    text-align: center;
-    color: white;
-    line-height: 20px;
-    border-radius: 25px 0 0 25px;
-    font-size: 0.85rem;
 }
 
 /* Footer */
 footer {
-    background-color: #467e58; /* Calm, darker green */
+    background-color: #467e58;
     color: white;
     text-align: center;
     padding: 1rem 0;
     margin-top: 2rem;
     font-size: 0.9rem;
-    position: absolute;
+    position:static;
     bottom: 0;
     width: 100%;
 }
 
 footer p {
     opacity: 70%;
+}
+
+img {
+    width: 350px;
+    height: auto;
 }
