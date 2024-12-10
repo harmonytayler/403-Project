@@ -256,4 +256,39 @@ const custid = req.body.custid;
 app.get('/login', (req, res) => {res.render('login');
 });
 
+app.get('/register', (req, res) => 
+    {res.render('register');
+});
+
+app.post('/register', (req, res) => {
+    const custfirstname = req.body.custfirstname;
+    const custlastname = req.body.custlastname;
+    const custstreetaddress = req.body.custstreetaddress;
+    const custcity = req.body.custcity;
+    const custstate = req.body.custstate; 
+    const custzip = parseInt(req.body.custzip);
+    const custphonenum = req.body.custphonenum;
+    const custemail = req.body.custemail;
+    const custpassword = req.body.custpassword;
+        knex('customers')
+            .insert({
+                custfirstname: custfirstname,
+                custlastname: custlastname,
+                custstreetaddress: custstreetaddress,
+                custcity: custcity,
+                custstate: custstate,
+                custzip: custzip,
+                custphonenum: custphonenum,
+                custemail: custemail,
+                custpassword: custpassword
+            })
+            .then(() => {
+            res.redirect('/');
+            })
+            .catch(error => {
+                console.error('Error adding data:', error);
+                res.status(500).send('Internal Server Error');
+            });
+})
+
 app.listen(port, () => console.log("Listening"));
