@@ -13,18 +13,41 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"));
 
+const bcrypt = require('bcrypt'); // sp1der code starts
+const session = require('express-session');
+
+app.use(session({
+  secret: 'sp1der', // i have no idea what this does
+  resave: false,
+  saveUninitialized: true,
+}));
+
+const checkLogin = (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect('/login');  // Redirect to login page if not logged in
+  }
+  next();
+}; // sp1der code stops
+
 const knex = require("knex") ({
     client : "pg",
     connection : {
         host : "localhost",
         user : "postgres",
-        password : "admin",
-        database : "403project",
+        password : "sp1DERap0CALypse042",
+        database : "project3",
         port : 5432
     }
 });
 
 app.get('/', (req, res) => {
+
+    if (!req.session.user) { //sp1
+    return res.redirect('/login');  // Redirect to login page if not logged in
+  }
+
+    const custid = req.session.user.custid; //der
+    
     knex('goals')
         .join('customers', 'goals.custid', '=', 'customers.custid')
         .select(
@@ -33,6 +56,7 @@ app.get('/', (req, res) => {
         'goals.goaldescription',
         'goals.goalstatus'
         )
+        .where({ 'customers.custid': custid }) //sp1der
         .orderBy('goals.goalid')
         .then(goals => {
         res.render('index', { goals });
@@ -43,7 +67,7 @@ app.get('/', (req, res) => {
         });
     });
 
-app.get('/goals', (req, res) => {
+app.get('/goals', checkLogin, (req, res) => {
     knex('goals')
         .join('customers', 'goals.custid', '=', 'customers.custid')
         .select(
@@ -62,7 +86,7 @@ app.get('/goals', (req, res) => {
         });
     });
 
-app.get('/editGoal/:goalid', (req, res) => {
+app.get('/editGoal/:goalid', checkLogin, (req, res) => {
     const goalid = req.params.goalid; 
     knex('goals')
         .where('goalid', goalid)
@@ -112,7 +136,7 @@ app.post('/deleteGoal/:goalid', (req, res) => {
         });
     });
 
-app.get('/addGoal', (req, res) => {
+app.get('/addGoal', checkLogin, (req, res) => {
     res.render('addGoal'); 
 });
 
@@ -127,7 +151,10 @@ app.post('/addGoal', (req, res) => {
 })
 
 // Route to display Health Metric records
-app.get('/healthMetrics', (req, res) => {
+app.get('/healthMetrics', checkLogin, (req, res) => {
+
+    const custid = req.session.user.custid; //sp1
+
     knex('health_metrics')
         .select(
         'health_metrics.metricid',
@@ -138,6 +165,7 @@ app.get('/healthMetrics', (req, res) => {
         'health_metrics.caloriesburned',
         'health_metrics.recorddate',
         )
+        .where({ 'health_metrics.custid': custid }) //sp1der
         .then(health_metrics => {
         // Render the index.ejs template and pass the data
         res.render('healthMetrics', {health_metrics});
@@ -148,7 +176,7 @@ app.get('/healthMetrics', (req, res) => {
     });
 });  
 
-app.get('/editMetric/:metricid', (req, res) => {
+app.get('/editMetric/:metricid', checkLogin, (req, res) => {
     const metricid = req.params.metricid;
     // Query the data by ID first
     knex('health_metrics')
@@ -212,7 +240,7 @@ app.post('/deleteMetric/:metricid', (req, res) => {
     });
 });
 
-app.get('/addMetric', (req, res) => {
+app.get('/addMetric', checkLogin, (req, res) => {
   // Fetch data
     knex('health_metrics')
         .select('metricid')
@@ -256,39 +284,96 @@ const custid = req.body.custid;
 app.get('/login', (req, res) => {res.render('login');
 });
 
-app.get('/register', (req, res) => 
-    {res.render('register');
+app.post('/login', (req, res) => { //sp1
+  const { custemail, custpassword } = req.body;
+
+  // Make sure the email and password are provided
+  if (!custemail || !custpassword) {
+    return res.send('Please provide both email and password.');
+  }
+
+  // Retrieve the user by email
+  knex('customers')
+    .where({ custemail: custemail })
+    .first() // Get the first matching user
+    .then(user => {
+      if (!user) {
+        // If no user is found with that email
+        return res.send('Invalid login');
+      }
+
+      // Temporary comparison: directly compare plaintext password
+      if (user.custpassword === custpassword) {
+        // If the password matches, store user info in session
+        req.session.user = { custid: user.custid, custemail: user.custemail };
+        res.redirect('/');  // Redirect to the home page or dashboard
+      } else {
+        // If the password does not match
+        res.send('Invalid login');
+      }
+    })
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.redirect('/goals');
+    }
+    res.clearCookie('connect.sid'); // Clear the session cookie
+    res.redirect('/login');  // Redirect to login page after logout
+  });
+});
+
+app.get('/register', (req, res) => {
+  res.render('register'); // Render your register.ejs page
 });
 
 app.post('/register', (req, res) => {
-    const custfirstname = req.body.custfirstname;
-    const custlastname = req.body.custlastname;
-    const custstreetaddress = req.body.custstreetaddress;
-    const custcity = req.body.custcity;
-    const custstate = req.body.custstate; 
-    const custzip = parseInt(req.body.custzip);
-    const custphonenum = req.body.custphonenum;
-    const custemail = req.body.custemail;
-    const custpassword = req.body.custpassword;
+  const { custemail, custpassword } = req.body;
+
+  if (!custemail || !custpassword) {
+    return res.send('Please provide both email and password.');
+  }
+
+  // Check if the email is already taken
+  knex('customers')
+    .where({ custemail: custemail })
+    .first()
+    .then(existingUser => {
+      if (existingUser) {
+        return res.send('Email already in use. Please try another one.');
+      }
+
+      // Hash the password before saving (using bcrypt)
+      bcrypt.hash(custpassword, 10, (err, hashedPassword) => {
+        if (err) {
+          console.error('Error hashing password:', err);
+          return res.status(500).send('Internal Server Error');
+        }
+
+        // Insert the new user into the database
         knex('customers')
-            .insert({
-                custfirstname: custfirstname,
-                custlastname: custlastname,
-                custstreetaddress: custstreetaddress,
-                custcity: custcity,
-                custstate: custstate,
-                custzip: custzip,
-                custphonenum: custphonenum,
-                custemail: custemail,
-                custpassword: custpassword
-            })
-            .then(() => {
-            res.redirect('/');
-            })
-            .catch(error => {
-                console.error('Error adding data:', error);
-                res.status(500).send('Internal Server Error');
-            });
-})
+          .insert({
+            custemail: custemail,
+            custpassword: hashedPassword, // Store the hashed password, not the plain text
+          })
+          .then(() => {
+            res.redirect('/login'); // Redirect to the login page after successful registration
+          })
+          .catch(error => {
+            console.error('Error creating user:', error);
+            res.status(500).send('Internal Server Error');
+          });
+      });
+    })
+    .catch(error => {
+      console.error('Error checking existing user:', error);
+      res.status(500).send('Internal Server Error');
+    });
+}); //der
 
 app.listen(port, () => console.log("Listening"));
